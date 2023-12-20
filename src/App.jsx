@@ -12,6 +12,13 @@ import {
 import { Alchemy, Network } from 'alchemy-sdk';
 import { useState } from 'react';
 
+const config = {
+  apiKey: import.meta.env.REACT_APP_ALCHEMY_API_KEY,
+  network: Network.ETH_GOERLI,
+};
+
+const alchemy = new Alchemy(config);
+
 function App() {
   const [userAddress, setUserAddress] = useState('');
   const [results, setResults] = useState([]);
@@ -19,12 +26,6 @@ function App() {
   const [tokenDataObjects, setTokenDataObjects] = useState([]);
 
   async function getNFTsForOwner() {
-    const config = {
-      apiKey: '<-- COPY-PASTE YOUR ALCHEMY API KEY HERE -->',
-      network: Network.ETH_MAINNET,
-    };
-
-    const alchemy = new Alchemy(config);
     const data = await alchemy.nft.getNftsForOwner(userAddress);
     setResults(data);
 
@@ -41,6 +42,7 @@ function App() {
     setTokenDataObjects(await Promise.all(tokenDataPromises));
     setHasQueried(true);
   }
+
   return (
     <Box w="100vw">
       <Center>
@@ -81,31 +83,29 @@ function App() {
 
         {hasQueried ? (
           <SimpleGrid w={'90vw'} columns={4} spacing={24}>
-            {results.ownedNfts.map((e, i) => {
-              return (
-                <Flex
-                  flexDir={'column'}
-                  color="white"
-                  bg="blue"
-                  w={'20vw'}
-                  key={e.id}
-                >
-                  <Box>
-                    <b>Name:</b>{' '}
-                    {tokenDataObjects[i].title?.length === 0
-                      ? 'No Name'
-                      : tokenDataObjects[i].title}
-                  </Box>
-                  <Image
-                    src={
-                      tokenDataObjects[i]?.rawMetadata?.image ??
-                      'https://via.placeholder.com/200'
-                    }
-                    alt={'Image'}
-                  />
-                </Flex>
-              );
-            })}
+            {results.ownedNfts.map((e, i) => (
+              <Flex
+                flexDir={'column'}
+                color="white"
+                bg="blue"
+                w={'20vw'}
+                key={`${e.id}-${i}`}
+              >
+                <Box>
+                  <b>Name:</b>{' '}
+                  {tokenDataObjects[i]?.title?.length === 0
+                    ? 'No Name'
+                    : tokenDataObjects[i]?.title}
+                </Box>
+                <Image
+                  src={
+                    tokenDataObjects[i]?.rawMetadata?.image ??
+                    'https://via.placeholder.com/200'
+                  }
+                  alt={'Image'}
+                />
+              </Flex>
+            ))}
           </SimpleGrid>
         ) : (
           'Please make a query! The query may take a few seconds...'
