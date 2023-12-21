@@ -55,7 +55,7 @@ function App() {
             NFT Indexer 🖼
           </Heading>
           <Text>
-            Plug in an address and this website will return all of its NFTs!
+            Put in an address and this website will return all of its NFTs!
           </Text>
         </Flex>
       </Center>
@@ -79,7 +79,7 @@ function App() {
           Fetch NFTs
         </Button>
 
-        <Heading my={36}>Here are your NFTs:</Heading>
+        <Heading my={36}>Here are your NFT's:</Heading>
 
         {hasQueried ? (
           <SimpleGrid w={"90vw"} columns={4} spacing={24}>
